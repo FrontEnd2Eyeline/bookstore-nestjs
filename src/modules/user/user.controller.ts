@@ -14,6 +14,8 @@ import { UserDto } from './dto/user.dto';
 import { User } from './user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { RoleService } from '../role/role.service';
+import { Roles } from '../role/decorators/role.decorator';
+import { RoleGuard } from '../role/guards/role.guard';
 
 @Controller('users')
 export class UserController {
@@ -50,7 +52,8 @@ export class UserController {
     return true;
   }
   @Post('setRole/:userId/:roleId')
-  @ROLES('ADMIN')
+  @Roles('ADMIN', 'AUTHOR')
+  @UseGuards(AuthGuard(), RoleGuard)
   async setRoleToUser(
     @Param('userId', ParseIntPipe) userId: number,
     @Param('roleId', ParseIntPipe) roleId: number,
